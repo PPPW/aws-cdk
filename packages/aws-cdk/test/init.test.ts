@@ -127,6 +127,10 @@ describe('constructs version', () => {
     const slnName = path.basename(workDir).split('-').map(s => `${s[0].toUpperCase()}${s.slice(1)}`).join('');
     const csprojFile = path.join(workDir, 'src', slnName, `${slnName}.csproj`);
 
+    // 👇 this expectation exists so fs.pathExists() doesn't fail intermittently
+    // due to a race condition I cannot track down.
+    console.log(fs.readdirSync(path.join(workDir, 'src', slnName))); // eslint-disable-line
+
     expect(await fs.pathExists(csprojFile)).toBeTruthy();
     const csproj = (await fs.readFile(csprojFile, 'utf8')).split(/\r?\n/);
     // return RegExpMatchArray (result of line.match()) for every lines that match re.
